@@ -10,21 +10,22 @@ linear sum(alfa*phi) gera a função exata que se quer aproximar.
 %% Definições prévias
 
 %Definição do domínio ômega
-xi = 2.0;
-xf = 8.0;
+xi = 0.0;
+xf = 1.5;
 
 %% condicoes de contorno (gerais) para formulacao fraca
-kap_a = 1e10;
-kap_b = 0;
+kap_a = 0;
+kap_b = 1e10;
 %Dirichlet
-g_a = -1;
-g_b = 0;
+g_a = 0;
+g_b = -1;
 %Neumman
-q_a = 0;
+q_a = pi;
 q_b = 0;
 
 %% inicio do loop para diferentes refinamentos de malha
 vetErro = [];
+for g = 1:4
 for k= 2:5
 %Definição malha
 nel = 4^k;
@@ -40,7 +41,7 @@ exata = funcao(x);
 %2- modelado por uma parábola
 %são necessários (grau + 1) nós no elemento para representar as funções
 %shg.
-grau = 1;
+grau = g;
 nen = grau + 1;
 
 %número de nós global: grau*nel +1
@@ -144,11 +145,12 @@ for n = i:nel
 end
 erroL2d = sqrt(erroL2d);
 %% Plot função e aproximacao
-figure;
-plot(x_global,alfa,'b', x_ex,funcao(x_ex), 'r' );
-title('Função aproximada com malha');
-xlabel('x');
-ylabel('f(x)')
+% figure;
+% plot(x_global,alfa,'b', x_ex,funcao(x_ex), 'r' );
+% % title("Função aproximada com malha "+ nel);
+% title('Função aproximada com malha');
+% xlabel('x');
+% ylabel('f(x)')
 
 %% Preparacao para o erro
 passos(k-1) = h;
@@ -156,14 +158,17 @@ vetErro(k-1) = erroL2;
 vetErrod(k-1) = erroL2d;
 end
 
-
-
 %% Plot Convergencia
-figure;
-plot(-log10(passos),log10(vetErro),'*-b');
+figure(1);
+plot(-log10(passos),log10(vetErro), '-*');
+hold on
+title('Erro da função');
 xlabel('-log10(h)');
 ylabel('log10(erro)')
-figure;
-plot(-log10(passos),log10(vetErrod),'*-r');
+figure(2);
+plot(-log10(passos),log10(vetErrod),'-*');
+hold on
+title('Erro da derivada da função');
 xlabel('-log10(h)');
 ylabel('log10(erro_{derivada})')
+end
