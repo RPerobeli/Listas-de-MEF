@@ -1,27 +1,23 @@
-clear all;
-close all;
-clc;
-
-%{
-Resolver o sistema M*alfa = b, onde alfa sao parametros em que a combinação
-linear sum(alfa*phi) gera a função exata que se quer aproximar.
-%}
+clear all
+close all
+clc
 
 %% Definições prévias
 
 %Definição do domínio ômega
 xi = 0.0;
-xf = 1.5;
+xf = 1.0;
 
 %% condicoes de contorno (gerais) para formulacao fraca
-kap_a = 0;
-kap_b = 1e10;
+kap_a = 1e10;
+kap_b = 0.5;
+% kap_b = 1e10;
 %Dirichlet
-g_a = 0;
-g_b = -1;
+g_a = 1;
+g_b = 0;
 %Neumman
-q_a = pi;
-q_b = 0;
+q_a = 0;
+q_b = -5./2.;
 
 %% inicio do loop para diferentes refinamentos de malha
 vetErro = [];
@@ -62,6 +58,7 @@ dx = h/2;
 
 %% Loop de montagem da matriz Global
 M = zeros(numNos_g,numNos_g);
+K = zeros(numNos_g,numNos_g);
 F = zeros(numNos_g,1);
 [w, p] = MontaQuadraturaGaussiana(grau);
 shg = MontaSHG(p,nint);
@@ -69,6 +66,7 @@ shg = MontaSHG(p,nint);
 for n = 1:nel
     %matriz do elemento e vetor fonte do elemento
     Me = zeros(nen,nen);
+    Ke = zeros(nen,nen);
     Fe = zeros(nen,1);
     %definir as posições de cada elemento no frame global
     xi_el = xi+(n-1)*h;
@@ -87,16 +85,19 @@ for n = 1:nel
         for j = 1:nen
             Fe(j) = Fe(j) + fonte(x_ref)*shg(1,j,l)*w(l)*dx;
             for i = 1:nen
-                Me(i,j) = Me(i,j)+ funcaoK(x_ref)*shg(2,i,l)*1/dx*shg(2,j,l)*1/dx*w(l)*dx;   
+                Me(i,j) = Me(i,j)+ funcaoGamma(x_ref)*shg(1,i,l)*shg(1,j,l)*w(l)*dx; 
+                Ke(i,j) = Ke(i,j)+ funcaoK(x_ref)*shg(2,i,l)*1/dx*shg(2,j,l)*1/dx*w(l)*dx;   
             end
         end
     end
     [M,F] = AddMatrizMEF(M, Me, n, F, Fe);
+    K = AddMatrizSemFonte(K, Ke, n);
 end
 
 %% Resolve o sistema linear
-[M,F] = AddCondContorno(M, F, kap_a, kap_b, g_a, g_b, q_a, q_b);
-alfa = M\F;
+M_final = K+M;
+[M_final,F] = AddCondContorno(M_final, F, kap_a, kap_b, g_a, g_b, q_a, q_b);
+alfa = M_final\F;
 
 %% Calculo do erro
 erroL2 = 0;
@@ -147,8 +148,10 @@ erroL2d = sqrt(erroL2d);
 %% Plot função e aproximacao
 % figure;
 % plot(x_global,alfa,'b', x_ex,funcao(x_ex), 'r' );
+% nome = num2str(nel);
+% frase = 'Função aproximada com malha ';
+% title(strcat(frase,nome));
 % % title("Função aproximada com malha "+ nel);
-% title('Função aproximada com malha');
 % xlabel('x');
 % ylabel('f(x)')
 
