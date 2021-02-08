@@ -6,6 +6,7 @@ function [ y ] = funcao( x )
 
 eps = 1e-3;
 c2 = (exp(-1/sqrt(eps)) - 1)/(exp(1/sqrt(eps))- exp(-1/sqrt(eps)));
-y = -1*exp(-x./sqrt(eps)) + c2*exp(x/sqrt(eps)) + 1;
+c1 = -1-c2;
+y = c1*exp(-x./sqrt(eps)) + c2*exp(x/sqrt(eps)) + 1;
 end
 

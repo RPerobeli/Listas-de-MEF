@@ -1,6 +1,7 @@
 function [ w,pontos ] = MontaQuadraturaGaussiana( grau )
 %Baseado no grau do polinomio, retorna um vetor com os valores dos pesos e
 %um vetor com pontos a serem usados na fun��o F da quadratura
+grau = 4;
 switch grau
     case 1
         w = [1;1];

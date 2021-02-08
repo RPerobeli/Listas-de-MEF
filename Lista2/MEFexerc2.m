@@ -21,7 +21,7 @@ q_b = -5./2.;
 
 %% inicio do loop para diferentes refinamentos de malha
 vetErro = [];
-for g = 1:4
+% for g = 1:4
 for k= 2:5
 %Definição malha
 nel = 2^k;
@@ -37,7 +37,7 @@ exata = funcao(x);
 %2- modelado por uma parábola
 %são necessários (grau + 1) nós no elemento para representar as funções
 %shg.
-grau = g;
+grau = 2;
 nen = grau + 1;
 
 %número de nós global: grau*nel +1
@@ -174,4 +174,4 @@ hold on
 title('Erro da derivada da função');
 xlabel('-log10(h)');
 ylabel('log10(erro_{derivada})')
-end
+% end
