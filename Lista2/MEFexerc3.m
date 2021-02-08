@@ -20,7 +20,7 @@ q_b = 0;
 
 %% inicio do loop para diferentes refinamentos de malha
 vetErro = [];
-% for g = 1:4
+for g = 1:4
 for k= 2:5
 %Definição malha
 nel = 4^k;
@@ -37,7 +37,7 @@ exata = funcao(x);
 %2- modelado por uma parábola
 %são necessários (grau + 1) nós no elemento para representar as funções
 %shg.
-grau = 1;
+grau = g;
 nen = grau + 1;
 
 %número de nós global: grau*nel +1
@@ -146,14 +146,14 @@ for n = 1:nel
 end
 erroL2d = sqrt(erroL2d);
 %% Plot função e aproximacao
-figure;
-plot(x_global,alfa,'b', x_ex,funcao(x_ex), 'r');
-nome = num2str(nel);
-frase = 'Função aproximada com malha ';
-title(strcat(frase,nome));
-% title("Função aproximada com malha "+ nel);
-xlabel('x');
-ylabel('f(x)')
+% figure;
+% plot(x_global,alfa,'b', x_ex,funcao(x_ex), 'r');
+% nome = num2str(nel);
+% frase = 'Função aproximada com malha ';
+% title(strcat(frase,nome));
+% % title("Função aproximada com malha "+ nel);
+% xlabel('x');
+% ylabel('f(x)')
 
 %% Preparacao para o erro
 passos(k-1) = h;
@@ -162,16 +162,16 @@ vetErrod(k-1) = erroL2d;
 end
 
 %% Plot Convergencia
-figure;
+figure(1);
 plot(-log10(passos),log10(vetErro), '-*');
 hold on
 title('Erro da função');
 xlabel('-log10(h)');
 ylabel('log10(erro)')
-figure;
+figure(2);
 plot(-log10(passos),log10(vetErrod),'-*');
 hold on
 title('Erro da derivada da função');
 xlabel('-log10(h)');
 ylabel('log10(erro_{derivada})')
-% end
+end

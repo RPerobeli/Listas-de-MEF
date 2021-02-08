@@ -2,7 +2,7 @@ function [ shg ] = MontaSHG(p,nint,h )
 %formação de uma matriz shg, que contém os valores das funções base
 %baseado na quadratura gaussiana
 grau = nint-1;
-grau = 53;
+% grau = 53;
 switch grau
     case 1
         disp('shg: 1');
