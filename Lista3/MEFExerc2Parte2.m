@@ -30,7 +30,8 @@ h = (xf-xi)/nel;
 
 Pe_h = kappa*h/(2*eps);
 % beta = coth(Pe_h(i))-1/Pe_h(i);
-beta = [0.2850];
+% beta = [0.2850];
+beta = 0:0.001:1;
 erroBeta=[];
 for(k = 1:length(beta))
 
@@ -110,17 +111,17 @@ M_final = K+M+C;
 alfa = M_final\F;
 
 %% Plot funcao e aproximacao
-figure;
-plot(x_global,alfa,'b', x_ex,funcao(x_ex), 'r');
-nome = num2str(beta);
-frase = 'Funcao aproximada por Bolha com beta ';
-title(strcat(frase,nome));
-% title("Funcao aproximada com malha "+ nel);
-xlabel('x');
-ylabel('f(x)');
-end
+% figure;
+% plot(x_global,alfa,'b', x_ex,funcao(x_ex), 'r');
+% nome = num2str(beta);
+% frase = 'Funcao aproximada por Bolha com beta ';
+% title(strcat(frase,nome));
+% % title("Funcao aproximada com malha "+ nel);
+% xlabel('x');
+% ylabel('f(x)');
+
 %% Calcula o erro com a função exata:
-%{
+%
 erroL2 = 0;
 
 for n = 1:nel
@@ -146,8 +147,8 @@ erroBeta = [erroBeta, erroL2];
 end
 %% plot do erro
 figure;
-plot(beta, erroBeta);
-title("Erro(L2) em funcao de Beta");
+plot(beta, erroBeta, 'r');
+title('Erro(L2) em funcao de Beta SUPG');
 xlabel('\beta');
 ylabel('erro');
 
